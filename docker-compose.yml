@@ -1,0 +1,10 @@
+version: "3"
+services:
+  CURaiseBackend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: cu_raise_backend
+    ports:
+      - "8888:80"
+
