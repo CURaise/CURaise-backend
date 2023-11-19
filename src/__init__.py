@@ -12,6 +12,18 @@ def create_app(config):
     with app.app_context():
         db.create_all()
 
+    from clubs import bp as clubs_bp
+    app.register_blueprint(blueprint=clubs_bp, url_prefix='/clubs')
+
+    from fundraisers import bp as fundraisers_bp
+    app.register_blueprint(blueprint=fundraisers_bp, url_prefix='/fundraisers')
+
+    from students import bp as students_bp
+    app.register_blueprint(blueprint=students_bp, url_prefix='/students')
+
+    from transactions import bp as transactions_bp
+    app.register_blueprint(blueprint=transactions_bp, url_prefix='/transactions')
+
     return app
 
 
