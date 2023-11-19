@@ -20,7 +20,7 @@ class Club(db.Model):
 
     fundraisers = db.relationship('Fundraiser', cascade='delete')
 
-    def __serialize(self, simplified=False):
+    def serialize(self, simplified=False):
         """
         A serialized the output for the club entry.
         :param simplified: whether the output should be simplified.
