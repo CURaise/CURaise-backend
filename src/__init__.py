@@ -1,7 +1,7 @@
 from flask import Flask
 
 from config import Config
-from models import db
+from extensions import db
 
 
 def create_app(config):
