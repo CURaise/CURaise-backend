@@ -28,9 +28,14 @@ def create_club():
     except Exception as e:
         return failure_message(FAIL_MSG.ADD_TO_DATABASE + str(e))
 
-    return success_message("Club created.")
+    return success_message(new_club.id)
 
 
 @bp.route('/<club_id>', methods=['GET'])
 def get_club_by_id(club_id):
-    return success_message({'yo': club_id})
+    try:
+        target = Club.query.filter_by(id=club_id).first()
+    except Exception as e:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND + str(e))
+
+    return success_message(target)
