@@ -1,5 +1,5 @@
-from . import db
-from club import student_club_association_table
+from src import db
+from .club import student_club_association_table
 
 
 class Student(db.Model):

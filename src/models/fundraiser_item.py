@@ -1,4 +1,4 @@
-from . import db
+from src import db
 
 class FundraiserItem(db.Model):
     __tablename__ = "fundraiser_item"
@@ -7,5 +7,5 @@ class FundraiserItem(db.Model):
     price = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String)
 
-    fundraiser = db.relationship()
+    # fundraiser = db.relationship()
     # transactions = db.

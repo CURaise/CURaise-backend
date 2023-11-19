@@ -1,5 +1,5 @@
-from . import db
-from . import Fundraiser
+from src import db
+from .fundraiser import Fundraiser
 
 # association table to connect Club with Student that is a member
 student_club_association_table = db.Table("student-club association", db.Model.metadata,

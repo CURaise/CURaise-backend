@@ -1,7 +1,7 @@
-from . import app
-
-from flask import Flask, request
-import json
+# from . import app
+#
+# from flask import Flask, request
+# import json
 
 # db_filename = "database.db"
 #
@@ -14,10 +14,10 @@ import json
 #     db.create_all()
 
 
-@app.route('/api/', methods=['POST'])
-def venmo_test():
-    pass
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8888, debug=True)
+# @app.route('/api/', methods=['POST'])
+# def venmo_test():
+#     pass
+#
+#
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=8888, debug=True)

@@ -1,7 +1,7 @@
 from clubs import bp
 from models import Club
 from models import db
-from utils import *
+from src.utils import *
 
 
 @bp.route('/signup/', methods=['POST'])

@@ -161,3 +161,4 @@ cython_debug/
 .idea/workspace.xml
 .idea/usage.statistics.xml
 .idea/shelf
+/app.db
