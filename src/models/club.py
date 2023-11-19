@@ -15,9 +15,28 @@ class Club(db.Model):
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     venmo_username = db.Column(db.String, nullable=False)
-    # FIXME do we need back populates
+
     members = db.relationship("Student", secondary=student_club_association_table, back_populates=...)
 
     fundraisers = db.relationship('Fundraiser', cascade='delete')
 
+    def __serialize(self, simplified=False):
+        """
+        A serialized the output for the club entry.
+        :param simplified: whether the output should be simplified.
+        :return: the serialized result in a dict.
+        """
+        extra = {}
 
+        if not simplified:
+            extra = {
+                'description': self.description,
+                'venmo_username': self.venmo_username,
+                'members': [member.serialize(simplified=True) for member in self.members]
+            }
+
+        return {
+            'id': self.id,
+            'name': self.name,
+            **extra
+        }

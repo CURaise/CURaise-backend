@@ -1,11 +1,10 @@
-from utils import *
-
 from clubs import bp
 from models import Club
 from models import db
+from utils import *
 
 
-@bp.route('/signup', methods=['POST'])
+@bp.route('/signup/', methods=['POST'])
 def create_club():
     try:
         json_data = json.loads(request.data)
@@ -31,7 +30,7 @@ def create_club():
     return success_message(new_club.id)
 
 
-@bp.route('/<club_id>', methods=['GET'])
+@bp.route('/<club_id>/', methods=['GET'])
 def get_club_by_id(club_id):
     try:
         target = Club.query.filter_by(id=club_id).first()
@@ -39,3 +38,15 @@ def get_club_by_id(club_id):
         return failure_message(FAIL_MSG.TARGET_NOT_FOUND + str(e))
 
     return success_message(target)
+
+
+@bp.route('/add_fundraisers/', methods=['POST'])
+def add_fundraisers():
+    pass
+
+
+@bp.route('/add_members/', methods=['POST'])
+def add_members():
+    pass
+
+
