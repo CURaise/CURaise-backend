@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-bp = Blueprint('posts', __name__)
+from clubs import routes
 
-from src.clubs import routes
+bp = Blueprint('posts', __name__)
