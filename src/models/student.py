@@ -15,7 +15,7 @@ class Student(db.Model):
         """
         A serialized the output for the student entry.
         :param simplified: whether the output should be simplified.
-        :return: the serialized result in a dict.
+        :return: a serialized result in a dict.
         """
         extra = {}
         if not simplified:

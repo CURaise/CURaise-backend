@@ -22,23 +22,30 @@ class Club(db.Model):
 
     fundraisers = db.relationship('Fundraiser', cascade='delete')
 
-    def serialize(self, simplified=False):
+    def serialize(self, exclude_venmo_username=False, simplified=False):
         """
         A serialized the output for the club entry.
+        :param exclude_venmo_username: whether to include the venmo_username.
         :param simplified: whether the output should be simplified.
-        :return: the serialized result in a dict.
+        :return: a serialized result in a dict.
         """
+        venmo_username = {}
         extra = {}
+
+        if not exclude_venmo_username:
+            venmo_username = {
+                'venmo_username': self.venmo_username
+            }
 
         if not simplified:
             extra = {
-                'description': self.description,
-                'venmo_username': self.venmo_username,
                 'members': [member.serialize(simplified=True) for member in self.members]
             }
 
         return {
             'id': self.id,
             'name': self.name,
+            'description': self.description,
+            **venmo_username,
             **extra
         }

@@ -5,7 +5,7 @@ import json
 
 class FAIL_MSG:
     FIELD_NAME_WRONG = "Please double check the submission field has everything contained. "
-    POST_FORM_ERROR = "You submitted a form that is unable to be converted to json. "
+    POST_FORM_ERROR = "You submitted a form that contains misrepresented values. "
     ADD_TO_DATABASE = "Internal issue. Unable to add the item to the database. "
     TARGET_NOT_FOUND = "Target not found in our database. Unable to query. "
 

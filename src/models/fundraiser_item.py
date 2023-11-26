@@ -13,6 +13,11 @@ class FundraiserItem(db.Model):
     transactions = db.relationship('Transaction', cascade='delete')
 
     def serialize(self, simplified=False):
+        """
+        A serialized the output for the fundraiser item entry.
+        :param simplified: whether the output should be simplified.
+        :return: a serialized result in a dict.
+        """
         extra = {}
         if not extra:
             extra = {

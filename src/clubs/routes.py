@@ -1,6 +1,6 @@
 from clubs import bp
-from models import Club
-from models import db
+from models import Club, Fundraiser
+from extensions import db
 from src.utils import *
 
 
@@ -37,16 +37,41 @@ def get_club_by_id(club_id):
     except Exception as e:
         return failure_message(FAIL_MSG.TARGET_NOT_FOUND + str(e))
 
-    return success_message(target)
+    return success_message(target.serialize(exclude_venmo_username=True, simplified=True))
 
 
 @bp.route('/add_fundraisers/', methods=['POST'])
 def add_fundraisers():
-    pass
+    try:
+        json_data = json.loads(request.data)
+        title = json_data['title']
+        description = json_data['description']
+        active_status = eval(json_data['active_status'])
+        start_datetime = json_data['start_datetime']
+        end_datetime = json_data['end_datetime']
+    except KeyError as e:
+        return failure_message(FAIL_MSG.FIELD_NAME_WRONG + str(e))
+    except json.decoder.JSONDecodeError as e:
+        return failure_message(FAIL_MSG.POST_FORM_ERROR + str(e))
+    except NameError as e:
+        return failure_message(FAIL_MSG.POST_FORM_ERROR + str(e))
+
+    try:
+        new_fundraiser = Fundraiser(
+            title=title,
+            description=description,
+            active_status=active_status,
+            start_datetime=start_datetime,
+            end_datetime=end_datetime
+        )
+        db.session.add(new_fundraiser)
+        db.session.commit()
+    except Exception as e:
+        return failure_message(FAIL_MSG.ADD_TO_DATABASE + str(e))
+
+    return success_message(new_fundraiser.id)
 
 
 @bp.route('/add_members/', methods=['POST'])
 def add_members():
     pass
-
-

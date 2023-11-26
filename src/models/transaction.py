@@ -17,6 +17,12 @@ class Transaction(db.Model):
     referrer = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=True)
 
     def serialize(self, simplified=False):
+        """
+        A serialized the output for the transaction entry.
+        :param simplified: whether the output should be simplified.
+        :return: a serialized result in a dict.
+        """
+
         extra = {}
 
         if not simplified:
