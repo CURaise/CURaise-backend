@@ -8,7 +8,7 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 class FAIL_MSG:
     class POST_FORM:
         ERROR = "You submitted a form that contains misrepresented values. "
-        FIELD_NAME_WRONG = "Please double check the submission field has everything contained. "
+        FIELD_NAME_WRONG = "Please double check the submission field has everything contained or the name is correct. "
 
     class PARSE_ERROR:
         BOOLEAN = "Unable to parse the boolean supplied. Should be either True or False. "
