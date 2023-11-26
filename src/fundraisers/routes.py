@@ -78,8 +78,8 @@ def get_all_fundraisers():
     return all_fundraisers
 
 
-@bp.route('/<fundraiser_id>/edit', methods=['PUT'])
-def edit_club(fundraiser_id):
+@bp.route('/<fundraiser_id>/edit/', methods=['PUT'])
+def edit_fundraiser(fundraiser_id):
     try:
         json_data = json.loads(request.data)
     except json.decoder.JSONDecodeError as e:
@@ -103,3 +103,8 @@ def edit_club(fundraiser_id):
         return failure_message(FAIL_MSG.ADD_TO_DATABASE)
 
     return success_message(fundraiser)
+
+
+@bp.route('/add_item/', methods=['POST'])
+def add_fundraiser_item():
+    pass

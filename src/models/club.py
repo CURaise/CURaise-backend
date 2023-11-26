@@ -25,7 +25,7 @@ class Club(db.Model):
     def serialize(self, exclude_venmo_username=False, simplified=False):
         """
         A serialized the output for the club entry.
-        :param exclude_venmo_username: whether to include the venmo_username.
+        :param exclude_venmo_username: whether to exclude the venmo_username.
         :param simplified: whether the output should be simplified.
         :return: a serialized result in a dict.
         """
