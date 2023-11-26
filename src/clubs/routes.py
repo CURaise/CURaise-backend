@@ -32,17 +32,12 @@ def create_club():
 
 @bp.route('/<club_id>/', methods=['GET'])
 def get_club_by_id(club_id):
-    try:
-        target = Club.query.filter_by(id=club_id).first()
-    except Exception as e:
-        return failure_message(FAIL_MSG.TARGET_NOT_FOUND + str(e))
+    target = Club.query.filter_by(id=club_id).first()
+
+    if target is None:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND + "Target=club.")
 
     return success_message(target.serialize(exclude_venmo_username=True, simplified=True))
-
-
-@bp.route('/add_members/', methods=['POST'])
-def add_members():
-    pass
 
 
 @bp.route('/<club_id>/edit', methods=['POST'])

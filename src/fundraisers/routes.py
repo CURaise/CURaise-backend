@@ -1,8 +1,9 @@
+from datetime import datetime
+
+from extensions import db
 from fundraisers import bp
 from models import Club, Fundraiser
-from extensions import db
 from src.utils import *
-from datetime import datetime
 
 
 @bp.route('/create/', methods=['POST'])
@@ -33,6 +34,9 @@ def create_fundraisers():
     except ValueError as e:
         return failure_message(FAIL_MSG.PARSE_ERROR.DATETIME + str(e))
 
+    if Club.query.filter_by(id=club_id).first() is None:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND + "Target=club")
+
     try:
         new_fundraiser = Fundraiser(
             club_id=club_id,
@@ -48,4 +52,21 @@ def create_fundraisers():
         return failure_message(FAIL_MSG.ADD_TO_DATABASE + str(e))
 
     return success_message(new_fundraiser.id)
+
+
+@bp.route('<fundraiser_id>/', methods=['GET'])
+def get_by_fundraiser_id(fundraiser_id):
+    fundraiser = Fundraiser.query.filter_by(id=fundraiser_id).first()
+
+    if fundraiser is None:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND + "Target=fundraiser.")
+
+    return success_message(fundraiser)
+
+
+@bp.route('club/<club_id>/', methods=['GET'])
+def get_by_club_id(club_id):
+    fundraisers_by_club = [fundraiser.serialize() for fundraiser in Fundraiser.query.filter_by(club_id=club_id)]
+
+    return success_message(fundraisers_by_club)
 
