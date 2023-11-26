@@ -40,7 +40,7 @@ def get_club_by_id(club_id):
     return success_message(target.serialize(exclude_venmo_username=True, simplified=True))
 
 
-@bp.route('/<club_id>/edit', methods=['POST'])
+@bp.route('/<club_id>/edit', methods=['PUT'])
 def edit_club(club_id):
     try:
         json_data = json.loads(request.data)

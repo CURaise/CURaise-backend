@@ -70,3 +70,36 @@ def get_by_club_id(club_id):
 
     return success_message(fundraisers_by_club)
 
+
+@bp.route('/', methods=['GET'])
+def get_all_fundraisers():
+    all_fundraisers = [fundraiser.serialize() for fundraiser in Fundraiser.query.all()]
+
+    return all_fundraisers
+
+
+@bp.route('/<fundraiser_id>/edit', methods=['PUT'])
+def edit_club(fundraiser_id):
+    try:
+        json_data = json.loads(request.data)
+    except json.decoder.JSONDecodeError as e:
+        return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
+
+    fundraiser = Fundraiser.query.filter_by(id=fundraiser_id).first()
+
+    if fundraiser is None:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND)
+
+    for k in json_data.keys():
+        if not hasattr(fundraiser, k):
+            return failure_message(FAIL_MSG.POST_FORM.FIELD_NAME_WRONG)
+
+    for k, v in json_data.items():
+        setattr(fundraiser, k, v)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        return failure_message(FAIL_MSG.ADD_TO_DATABASE)
+
+    return success_message(fundraiser)
