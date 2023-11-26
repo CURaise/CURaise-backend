@@ -9,7 +9,7 @@ class Student(db.Model):
     name = db.Column(db.String, nullable=False)
     netid = db.Column(db.String, nullable=False, unique=True)
     venmo_username = db.Column(db.String, nullable=False, unique=True)
-    clubs = db.Column(db.Integer, db.ForeignKey(''))
+    clubs = db.relationship("Club", secondary=student_club_association_table, back_populates='members')
 
     def serialize(self, simplified=False):
         """

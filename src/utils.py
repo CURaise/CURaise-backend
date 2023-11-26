@@ -9,6 +9,7 @@ class FAIL_MSG:
     ADD_TO_DATABASE = "Internal issue. Unable to add the item to the database. "
     TARGET_NOT_FOUND = "Target not found in our database. Unable to query. "
 
+
 def success_message(x, code=201):
     """
     The success message.

@@ -16,7 +16,7 @@ class Club(db.Model):
     description = db.Column(db.String, nullable=False)
     venmo_username = db.Column(db.String, nullable=False)
 
-    members = db.relationship("Student", secondary=student_club_association_table, back_populates=...)
+    members = db.relationship("Student", secondary=student_club_association_table, back_populates='clubs')
 
     fundraisers = db.relationship('Fundraiser', cascade='delete')
 
