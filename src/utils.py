@@ -17,6 +17,8 @@ def success_message(x, code=201):
     :param code: code to be returned. Default 201
     :return: (json.dumps(x), code)
     """
+    if hasattr(x, 'serialize'):
+        x = x.serialize()
     return json.dumps({'status': 'success', 'success_msg': x}), code
 
 

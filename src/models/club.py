@@ -1,15 +1,17 @@
+import json
+
 from src import db
 from .fundraiser import Fundraiser
 
 # association table to connect Club with Student that is a member
-student_club_association_table = db.Table("student-club association", db.Model.metadata,
-    db.Column("club_id", db.Integer, db.ForeignKey("club.id")),
-    db.Column("student_id", db.Integer, db.ForeignKey("student.id")),
-)
+student_club_association_table = db.Table("student_club_association_table", db.Model.metadata,
+                                          db.Column("club_id", db.Integer, db.ForeignKey("club.id")),
+                                          db.Column("student_id", db.Integer, db.ForeignKey("student.id")),
+                                          )
 
 
 class Club(db.Model):
-    __tablename__='club'
+    __tablename__ = 'club'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
