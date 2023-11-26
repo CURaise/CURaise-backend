@@ -47,5 +47,6 @@ class Club(db.Model):
             'name': self.name,
             'description': self.description,
             **venmo_username,
+            'fundraisers': [fundraiser.serialize(simplified=True) for fundraiser in self.fundraisers],
             **extra
         }

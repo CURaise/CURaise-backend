@@ -2,10 +2,18 @@ from flask import request
 
 import json
 
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
 
 class FAIL_MSG:
-    FIELD_NAME_WRONG = "Please double check the submission field has everything contained. "
-    POST_FORM_ERROR = "You submitted a form that contains misrepresented values. "
+    class POST_FORM:
+        ERROR = "You submitted a form that contains misrepresented values. "
+        FIELD_NAME_WRONG = "Please double check the submission field has everything contained. "
+
+    class PARSE_ERROR:
+        BOOLEAN = "Unable to parse the boolean supplied. Should be either True or False. "
+        DATETIME = "Unable to parse the datetime supplied."
+
     ADD_TO_DATABASE = "Internal issue. Unable to add the item to the database. "
     TARGET_NOT_FOUND = "Target not found in our database. Unable to query. "
 
