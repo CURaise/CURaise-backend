@@ -9,3 +9,5 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True
     APPLICATION_ROOT = '/api'
+
+    # FIREBASE_
