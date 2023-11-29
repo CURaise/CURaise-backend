@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from extensions import db
-from fundraisers import bp
-from models import Club, Fundraiser
+from src.extensions import db
+from src.fundraisers import bp
+from src.models import Club, Fundraiser
 from src.utils import *
 
 

@@ -1,1 +1,1 @@
-gunicorn -c config.py app:app
+gunicorn -c config.py 'src:create_app()'

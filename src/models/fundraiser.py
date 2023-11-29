@@ -1,6 +1,6 @@
 from src import db
 from datetime import datetime
-from utils import DATETIME_FORMAT
+from src.utils import DATETIME_FORMAT
 
 
 class Fundraiser(db.Model):

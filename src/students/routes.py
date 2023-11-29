@@ -1,6 +1,6 @@
-from clubs import bp
-from extensions import db
-from models import Student
+from src.clubs import bp
+from src.extensions import db
+from src.models import Student
 from src.utils import *
 
 

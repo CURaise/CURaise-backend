@@ -1,4 +1,4 @@
-from main import bp
+from src.main import bp
 
 
 @bp.route('/signup/', methods=['POST'])
