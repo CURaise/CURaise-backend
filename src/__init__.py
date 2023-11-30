@@ -2,6 +2,7 @@ from flask import Flask
 
 from config import Config
 from src.extensions import db
+from src.extensions import login_manager
 
 from dotenv import load_dotenv
 
@@ -22,6 +23,8 @@ def create_app(config=Config()):
     db.init_app(app)
     with app.app_context():
         db.create_all()
+
+    login_manager.init_app(app)
 
     from src.clubs import bp as clubs_bp
     app.register_blueprint(blueprint=clubs_bp, url_prefix='/clubs')

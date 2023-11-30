@@ -1,8 +1,10 @@
+from flask_login import UserMixin
+
 from src import db
 from .club import student_club_association_table
 
 
-class Student(db.Model):
+class Student(db.Model, UserMixin):
     __tablename__ = 'student'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -10,6 +12,24 @@ class Student(db.Model):
     netid = db.Column(db.String, nullable=False, unique=True)
     venmo_username = db.Column(db.String, nullable=False, unique=True)
     clubs = db.relationship("Club", secondary=student_club_association_table, back_populates='members')
+
+    authenticated = db.Column(db.Boolean, nullable=False, default=False)
+
+    @property
+    def is_authenticated(self):
+        """
+        If the user is authenticated.
+        :return: True if authenticated. False otherwise.
+        """
+        return self.authenticated
+
+    @property
+    def is_anonymous(self):
+        """
+        Return whether the student cna be anonymous
+        :return: False, because anonymity is not supported
+        """
+        return False
 
     def serialize(self, exclude_venmo_username=False, simplified=False):
         """

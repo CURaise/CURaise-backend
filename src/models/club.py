@@ -1,4 +1,4 @@
-import json
+from flask_login import UserMixin
 
 from src import db
 from .fundraiser import Fundraiser
@@ -10,7 +10,7 @@ student_club_association_table = db.Table("student_club_association_table", db.M
                                           )
 
 
-class Club(db.Model):
+class Club(db.Model, UserMixin):
     __tablename__ = 'club'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -21,6 +21,24 @@ class Club(db.Model):
     members = db.relationship("Student", secondary=student_club_association_table, back_populates='clubs')
 
     fundraisers = db.relationship('Fundraiser', cascade='delete')
+
+    authenticated = db.Column(db.Boolean, nullable=False, default=False)
+
+    @property
+    def is_authenticated(self):
+        """
+        If the user is authenticated.
+        :return: True if authenticated. False otherwise.
+        """
+        return self.authenticated
+
+    @property
+    def is_anonymous(self):
+        """
+        Return whether the student cna be anonymous
+        :return: False, because anonymity is not supported
+        """
+        return False
 
     def serialize(self, exclude_venmo_username=False, simplified=False):
         """

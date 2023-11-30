@@ -3,10 +3,12 @@ boto3
 cryptography
 docopt
 firebase-admin
+flask-login
 flask-sqlalchemy
 grpcio-status
 gunicorn
 pip-chill
+pycryptodome
 pyrebase
 python-dotenv
 typing-extensions
