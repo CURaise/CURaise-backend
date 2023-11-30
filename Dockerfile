@@ -9,4 +9,4 @@ RUN set -xe && \
     apt-get install python3-pip -y &&  \
     pip install -r requirements.txt
 
-CMD ./start_server.sh
+CMD bash ./start_server.sh

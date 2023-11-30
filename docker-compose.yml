@@ -4,7 +4,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: cu_raise_backend
+    image: curaisebackend
     ports:
       - "8888:80"
 
