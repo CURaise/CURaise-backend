@@ -1,2 +1,2 @@
-worker = 4
+worker = 2
 bind = '0.0.0.0:8888'
