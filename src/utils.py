@@ -1,5 +1,3 @@
-from flask import request
-
 import json
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
@@ -14,6 +12,10 @@ class FAIL_MSG:
         BOOLEAN = "Unable to parse the boolean supplied. Should be either True or False. "
         DATETIME = "Unable to parse the datetime supplied. "
         FLOAT = "Unable to parse the float supplied. "
+
+    class VENMO:
+        UNABLE_GET_USER_ID = "Unable to get the user id by the username provided. "
+        UNABLE_GET_TRANSACTION = "Unable to get the transactions by the id provided. "
 
     ADD_TO_DATABASE = "Internal issue. Unable to add the item to the database. "
     REMOVE_FROM_DATABASE = "Internal issue. Unable to remove the item from the database. "
