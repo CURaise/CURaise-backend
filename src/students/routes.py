@@ -55,17 +55,7 @@ def edit_student_by_id(student_id=None, netid=None):
     except json.decoder.JSONDecodeError as e:
         return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
 
-    if (student_id is None and netid is None) or (student_id is not None and netid is not None):
-        return failure_message(FAIL_MSG.POST_FORM.ERROR + 'student_id and netid should not be all supplied or none '
-                                                          'applied')
-
-    if student_id is not None:
-        student = Student.query.filter_by(id=student_id).first()
-    else:
-        student = Student.query.filter_by(netid=netid).first()
-
-    if student is None:
-        return failure_message(FAIL_MSG.TARGET_NOT_FOUND)
+    student = get_student_by_id(student_id=student_id, netid=netid)
 
     for k in json_data.keys():
         if not hasattr(student, k):
@@ -77,6 +67,24 @@ def edit_student_by_id(student_id=None, netid=None):
     try:
         db.session.commit()
     except Exception as e:
-        return failure_message(FAIL_MSG.ADD_TO_DATABASE)
+        return failure_message(FAIL_MSG.ADD_TO_DATABASE + str(e))
+
+    return success_message(student)
+
+
+@bp.route('/netid/<netid>/', methods=['DELETE'])
+@bp.route('/<student_id>/', methods=['DELETE'])
+def delete_student_by_id(student_id=None, netid=None):
+    student = get_student_by_id(student_id=student_id, netid=netid)
+
+    # If and only if the return is tuple, the error was prompted in the getting function
+    if isinstance(student, tuple):
+        return student
+
+    try:
+        db.session.delete(student)
+        db.session.commit()
+    except Exception as e:
+        return failure_message(FAIL_MSG.REMOVE_FROM_DATABASE + str(e))
 
     return success_message(student)

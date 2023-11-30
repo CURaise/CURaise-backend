@@ -65,3 +65,20 @@ def edit_club(club_id):
         return failure_message(FAIL_MSG.ADD_TO_DATABASE)
 
     return success_message(club)
+
+
+@bp.route('/<club_id>/', methods=['DELETE'])
+def delete_by_club_id(club_id):
+    club = get_club_by_id(club_id=club_id)
+
+    # If and only if the return is tuple, the error was prompted in the getting function
+    if isinstance(club, tuple):
+        return club
+
+    try:
+        db.session.delete(club)
+        db.session.commit()
+    except Exception as e:
+        return failure_message(FAIL_MSG.REMOVE_FROM_DATABASE + str(e))
+
+    return success_message(club)

@@ -12,9 +12,11 @@ class FAIL_MSG:
 
     class PARSE_ERROR:
         BOOLEAN = "Unable to parse the boolean supplied. Should be either True or False. "
-        DATETIME = "Unable to parse the datetime supplied."
+        DATETIME = "Unable to parse the datetime supplied. "
+        FLOAT = "Unable to parse the float supplied. "
 
     ADD_TO_DATABASE = "Internal issue. Unable to add the item to the database. "
+    REMOVE_FROM_DATABASE = "Internal issue. Unable to remove the item from the database. "
     TARGET_NOT_FOUND = "Target not found in our database. Unable to query. "
 
 

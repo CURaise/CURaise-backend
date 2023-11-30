@@ -13,8 +13,8 @@ class Fundraiser(db.Model):
     description = db.Column(db.String, nullable=False)
     active_status = db.Column(db.Boolean, default=False, nullable=False)
 
-    created_datetime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow().strftime(DATETIME_FORMAT))
-    last_modified_datetime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow().strftime(DATETIME_FORMAT))
+    created_datetime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+    last_modified_datetime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     start_datetime = db.Column(db.DateTime, nullable=False)
     end_datetime = db.Column(db.DateTime, nullable=False)
 
@@ -39,10 +39,10 @@ class Fundraiser(db.Model):
             'description': self.description,
             'active_status': self.active_status,
 
-            'created_datetime': str(self.created_datetime),
-            'last_modified_datetime': str(self.last_modified_datetime),
-            'start_datetime': str(self.start_datetime),
-            'end_datetime': str(self.end_datetime),
+            'created_datetime': str(self.created_datetime.strftime(DATETIME_FORMAT)),
+            'last_modified_datetime': str(self.last_modified_datetime.strftime(DATETIME_FORMAT)),
+            'start_datetime': str(self.start_datetime.strftime(DATETIME_FORMAT)),
+            'end_datetime': str(self.end_datetime.strftime(DATETIME_FORMAT)),
 
             **extra,
         }
