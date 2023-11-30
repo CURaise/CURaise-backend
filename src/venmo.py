@@ -2,7 +2,6 @@ import os
 from dotenv import load_dotenv
 from venmo_api import Client
 
-load_dotenv()
 
 client = Client(access_token=os.environ["VENMO_TOKEN"])
 

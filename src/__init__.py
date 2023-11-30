@@ -1,8 +1,9 @@
-
 from flask import Flask
 
 from config import Config
 from src.extensions import db
+
+from dotenv import load_dotenv
 
 # Imports for creating the tables. DO NOT remove them for import optimization...
 from src.models.club import Club
@@ -13,6 +14,8 @@ from src.models.transaction import Transaction
 
 
 def create_app(config=Config()):
+    load_dotenv()
+
     app = Flask(__name__)
     app.config.from_object(config)
 
