@@ -2,7 +2,7 @@ from src.extensions import client
 import asyncio
 
 
-async def get_user_by_username(nickname: str, username: str) -> (int, object):
+async def get_user_by_username(username: str) -> (int, object):
     """
     Get a user by its nickname and username
     :param nickname: the nickname on the venmo account
@@ -10,11 +10,13 @@ async def get_user_by_username(nickname: str, username: str) -> (int, object):
     :return: (status_code: 0 means ok, -1 means empty, -2 means timeout), (user object)
     """
     async def async_get_user_by_username():
-        users = client.user.search_for_users(query=nickname, limit=5)
-        for user in users:
-            if user.username == username:
-                return user
-        return None
+        return client.user.get_user_by_username(username=username)
+        # # DO NOT REMOVE THE COMMENTED CODE
+        # users = client.user.search_for_users(query=nickname, limit=5)
+        # for user in users:
+        #     if user.username == username:
+        #         return user
+        # return None
 
     # We need to use asyncio because it's very easy to take a long time to query. We do not want that to happen.
     try:
@@ -38,7 +40,7 @@ async def get_transaction(buyer_id: int, club_id: int) -> (int, list):
     :return:
     """
     async def async_get_transaction():
-        return client.user.get_transaction_between_two_users(user_id_one=buyer_id, user_id_two=club_id)
+        return client.user.get_user_by_username(user_id_one=buyer_id, user_id_two=club_id)
 
     # We need to use asyncio because it's very easy to take a long time to query. We do not want that to happen.
     try:

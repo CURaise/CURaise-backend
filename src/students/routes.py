@@ -13,13 +13,12 @@ def create_student():
         name = json_data['name']
         netid = json_data['netid']
         venmo_username = json_data['venmo_username']
-        venmo_nickname = json_data['venmo_nickname']
     except KeyError as e:
         return failure_message(FAIL_MSG.POST_FORM.FIELD_NAME_WRONG + str(e))
     except json.decoder.JSONDecodeError as e:
         return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
 
-    status, venmo_user = get_user_by_username(nickname=venmo_nickname, username=venmo_username)
+    status, venmo_user = get_user_by_username(username=venmo_username)
 
     if status == -2:
         return failure_message(FAIL_MSG.VENMO.TIMEOUT + 'create_student')
@@ -31,7 +30,6 @@ def create_student():
             name=name,
             netid=netid,
             venmo_id=venmo_user.id,
-            venmo_nickname=venmo_nickname,
             venmo_username=venmo_username
         )
         db.session.add(new_student)

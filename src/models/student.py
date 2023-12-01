@@ -11,7 +11,6 @@ class Student(db.Model, UserMixin):
     name = db.Column(db.String, nullable=False)
     netid = db.Column(db.String, nullable=False, unique=True)
 
-    venmo_nickname = db.Column(db.String, nullable=False, unique=False)
     venmo_username = db.Column(db.String, nullable=False, unique=True)
     venmo_id = db.Column(db.String, nullable=False, unique=True)
 
