@@ -31,3 +31,10 @@ class Admin(db.Model, UserMixin):
         :return: False, because anonymity is not supported
         """
         return False
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email
+        }

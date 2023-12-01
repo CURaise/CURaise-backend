@@ -59,10 +59,87 @@ def create_club():
     except Exception as e:
         return failure_message(FAIL_MSG.ADD_TO_DATABASE + str(e))
 
+    login_user(new_club, remember=True)
+
     return success_message(new_club.id)
 
 
+@bp.route('/signin/', methods=['POST'])
+def signin_club():
+    try:
+        json_data = json.loads(request.data)
+        email = json_data['email']
+        password = json_data['password']
+    except KeyError as e:
+        return failure_message(FAIL_MSG.POST_FORM.FIELD_NAME_WRONG + str(e))
+    except json.decoder.JSONDecodeError as e:
+        return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
+
+    club = Club.query.filter_by(email=email).first()
+    if club is None:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND)
+
+    if not check_password_hash(club.password, password):
+        return failure_message(FAIL_MSG.WRONG_PASSWORD)
+
+    if login_user(club, remember=True):
+        return success_message("Log in success. ")
+    else:
+        return failure_message(FAIL_MSG.LOGIN_FAILED)
+
+
+@bp.route('/signout/', methods=['POST'])
+@role_required('club')
+def signout_club():
+    if logout_user():
+        return success_message("Log out success. ")
+    else:
+        return failure_message(FAIL_MSG.SIGNOUT_FAILED)
+
+
+@bp.route('/my/', methods=['GET'])
+@role_required('club')
+def get_me():
+    return success_message(current_user.serialize())
+
+
+@bp.route('/my/edit/', methods=['PUT'])
+@role_required('club')
+def edit_me():
+    try:
+        json_data = json.loads(request.data)
+    except json.decoder.JSONDecodeError as e:
+        return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
+
+    for k in json_data.keys():
+        if not hasattr(current_user, k):
+            return failure_message(FAIL_MSG.POST_FORM.FIELD_NAME_WRONG)
+
+    for k, v in json_data.items():
+        setattr(current_user, k, v)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        return failure_message(FAIL_MSG.ADD_TO_DATABASE + str(e))
+
+    return success_message(current_user.serialize())
+
+
+@bp.route('/my/', methods=['DELETE'])
+@role_required('club')
+def delete_me():
+    try:
+        db.session.delete(current_user)
+        db.session.commit()
+    except Exception as e:
+        return failure_message(FAIL_MSG.REMOVE_FROM_DATABASE + str(e))
+
+    return success_message(current_user.serialize())
+
+
 @bp.route('/<club_id>/', methods=['GET'])
+@role_required('admin')
 def get_club_by_id(club_id):
     target = Club.query.filter_by(id=club_id).first()
 
@@ -73,6 +150,7 @@ def get_club_by_id(club_id):
 
 
 @bp.route('/<club_id>/edit/', methods=['PUT'])
+@role_required('admin')
 def edit_club(club_id):
     try:
         json_data = json.loads(request.data)
@@ -100,6 +178,7 @@ def edit_club(club_id):
 
 
 @bp.route('/<club_id>/', methods=['DELETE'])
+@role_required('admin')
 def delete_by_club_id(club_id):
     club = get_club_by_id(club_id=club_id)
 

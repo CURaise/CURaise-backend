@@ -8,6 +8,7 @@ from src.utils import *
 
 
 @bp.route('/create/', methods=['POST'])
+@role_required('club')
 def create_fundraisers():
     """
     Add a fundraiser event to the database.
@@ -78,6 +79,7 @@ def get_all_fundraisers():
 
 
 @bp.route('/<fundraiser_id>/edit/', methods=['PUT'])
+@role_required('club')
 def edit_fundraiser(fundraiser_id):
     try:
         json_data = json.loads(request.data)
@@ -105,6 +107,7 @@ def edit_fundraiser(fundraiser_id):
 
 
 @bp.route('/add_item/', methods=['POST'])
+@role_required('club')
 def add_fundraiser_item():
     try:
         json_data = json.loads(request.data)
@@ -136,6 +139,7 @@ def add_fundraiser_item():
 
 
 @bp.route('/<fundraiser_id>/', methods=['DELETE'])
+@role_required('club')
 def delete_fundraiser_by_id(fundraiser_id):
     fundraiser = get_by_fundraiser_id(fundraiser_id=fundraiser_id)
 

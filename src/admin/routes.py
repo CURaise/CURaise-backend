@@ -72,3 +72,44 @@ def signout_admin():
         return success_message("Log out success. ")
     else:
         return failure_message(FAIL_MSG.SIGNOUT_FAILED)
+
+
+@bp.route('/my/', methods=['GET'])
+@role_required('admin')
+def get_me():
+    return success_message(current_user.serialize())
+
+
+@bp.route('/my/edit/', methods=['PUT'])
+@role_required('admin')
+def edit_me():
+    try:
+        json_data = json.loads(request.data)
+    except json.decoder.JSONDecodeError as e:
+        return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
+
+    for k in json_data.keys():
+        if not hasattr(current_user, k):
+            return failure_message(FAIL_MSG.POST_FORM.FIELD_NAME_WRONG)
+
+    for k, v in json_data.items():
+        setattr(current_user, k, v)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        return failure_message(FAIL_MSG.ADD_TO_DATABASE + str(e))
+
+    return success_message(current_user.serialize())
+
+
+@bp.route('/my/', methods=['DELETE'])
+@role_required('admin')
+def delete_me():
+    try:
+        db.session.delete(current_user)
+        db.session.commit()
+    except Exception as e:
+        return failure_message(FAIL_MSG.REMOVE_FROM_DATABASE + str(e))
+
+    return success_message(current_user.serialize())
