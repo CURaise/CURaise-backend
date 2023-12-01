@@ -1,7 +1,7 @@
 from flask import request
 import asyncio
 
-from src.clubs import bp
+from src.admin import bp
 from src.extensions import db
 from src.models import Admin
 from src.utils import *
