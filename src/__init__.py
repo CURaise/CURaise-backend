@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 
 from config import Config
@@ -19,6 +21,7 @@ def create_app(config=Config()):
 
     app = Flask(__name__)
     app.config.from_object(config)
+    app.secret_key = os.environ['FLASK_SECUREKEY']
 
     db.init_app(app)
     with app.app_context():
@@ -27,21 +30,21 @@ def create_app(config=Config()):
     login_manager.init_app(app)
 
     from src.clubs import bp as clubs_bp
-    app.register_blueprint(blueprint=clubs_bp, url_prefix='/clubs')
+    app.register_blueprint(blueprint=clubs_bp, url_prefix='/api/clubs')
 
     from src.fundraisers import bp as fundraisers_bp
-    app.register_blueprint(blueprint=fundraisers_bp, url_prefix='/fundraisers')
+    app.register_blueprint(blueprint=fundraisers_bp, url_prefix='/api/fundraisers')
 
     from src.students import bp as students_bp
-    app.register_blueprint(blueprint=students_bp, url_prefix='/students')
+    app.register_blueprint(blueprint=students_bp, url_prefix='/api/students')
 
     from src.transactions import bp as transactions_bp
-    app.register_blueprint(blueprint=transactions_bp, url_prefix='/transactions')
+    app.register_blueprint(blueprint=transactions_bp, url_prefix='/api/transactions')
 
-    from src.services import bp as services_bp
-    app.register_blueprint(blueprint=services_bp, url_prefix='')
+    from src.admin import bp as admin_bp
+    app.register_blueprint(blueprint=admin_bp, url_prefix='/api/admin')
 
     from src.main import bp as main_bp
-    app.register_blueprint(blueprint=main_bp, url_prefix='')
+    app.register_blueprint(blueprint=main_bp, url_prefix='/api')
 
     return app

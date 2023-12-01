@@ -1,4 +1,6 @@
 import json
+from functools import wraps
+from flask_login import current_user
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -22,6 +24,12 @@ class FAIL_MSG:
     REMOVE_FROM_DATABASE = "Internal issue. Unable to remove the item from the database. "
     TARGET_NOT_FOUND = "Target not found in our database. Unable to query. "
 
+    LOGIN_REQUIRED = "Login required. "
+    SIGNUP_FAILED = "Sign up failed for unknown reasons. "
+    LOGIN_FAILED = "Login Failed for unknown reasons. "
+    SIGNOUT_FAILED = "Sign out Failed for unknown reasons. "
+    WRONG_PASSWORD = "Wrong password. "
+
 
 def success_message(x, code=201):
     """
@@ -43,3 +51,20 @@ def failure_message(x, code=400):
     :return: (json.dumps(x), code)
     """
     return json.dumps({'status': 'error', 'error_msg': x}), code
+
+
+def role_required(role):
+    """
+    A decorator function that is used for differentiated access (because there are two roles: students and clubs)
+    NOTE: admin can bypass all roles.
+    :param role: student or club
+    :return: the decorator
+    """
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated or (current_user.role != role and current_user.role != 'admin'):
+                return failure_message(FAIL_MSG.LOGIN_REQUIRED)
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator

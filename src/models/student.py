@@ -6,6 +6,7 @@ from .club import student_club_association_table
 
 class Student(db.Model, UserMixin):
     __tablename__ = 'student'
+    role = 'student'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -17,6 +18,9 @@ class Student(db.Model, UserMixin):
     clubs = db.relationship("Club", secondary=student_club_association_table, back_populates='members')
 
     authenticated = db.Column(db.Boolean, nullable=False, default=False)
+
+    email = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
 
     @property
     def is_authenticated(self):

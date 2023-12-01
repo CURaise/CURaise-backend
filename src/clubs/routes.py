@@ -8,6 +8,18 @@ from src.utils import *
 
 from src.transactions.utils import get_user_by_username
 
+from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.security import check_password_hash, generate_password_hash
+
+
+@DeprecationWarning
+# @bp.before_request
+def check_login():
+    public_endpoints = ['signup']
+    if request.endpoint in public_endpoints:
+        return  # If nothing returned, skip
+    return failure_message(FAIL_MSG.LOGIN_REQUIRED)
+
 
 @bp.route('/signup/', methods=['POST'])
 def create_club():
@@ -16,6 +28,9 @@ def create_club():
         name = json_data['name']
         description = json_data['description']
         venmo_username = json_data['venmo_username']
+
+        email = json_data['email']
+        password = json_data['password']
     except KeyError as e:
         return failure_message(FAIL_MSG.POST_FORM.FIELD_NAME_WRONG + str(e))
     except json.decoder.JSONDecodeError as e:
@@ -28,12 +43,16 @@ def create_club():
     if status == -1:
         return failure_message(FAIL_MSG.VENMO.UNABLE_GET_USER_ID + 'create_club')
 
+    password = generate_password_hash(password)
+
     try:
         new_club = Club(
             name=name,
             description=description,
             venmo_id=venmo_user.id,
-            venmo_username=venmo_username
+            venmo_username=venmo_username,
+            email=email,
+            password=password
         )
         db.session.add(new_club)
         db.session.commit()
@@ -75,7 +94,7 @@ def edit_club(club_id):
     try:
         db.session.commit()
     except Exception as e:
-        return failure_message(FAIL_MSG.ADD_TO_DATABASE)
+        return failure_message(FAIL_MSG.ADD_TO_DATABASE + str(e))
 
     return success_message(club)
 

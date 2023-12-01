@@ -56,13 +56,24 @@ async def get_transaction(buyer_id: int, club_id: int) -> (int, float):
 
 
 def create_reference_string(transaction_id):
-    transaction_id * 76622729181571704961
+    """
+    Create a reference string that will be stored in the database.
+    :param transaction_id: the transaction id
+    :return: the reference string created
+    """
+    transaction_id * 76622729181571704961  # A large prime number
     characters = string.ascii_letters + string.digits
     random_string = [''.join(random.choice(characters)) for _ in range(15)]
     return random_string
 
 
 def get_qr_code_link(transaction_id, reference_string):
+    """
+    Create the QR code
+    :param transaction_id: the transaction id
+    :param reference_string: the reference string based on the transaction id
+    :return:
+    """
     return f'https://chart.googleapis.com/chart?cht=qr&chl={transaction_id}__{reference_string}&chs=500x500'
 
 
