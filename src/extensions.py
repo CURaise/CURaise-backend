@@ -1,9 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 from venmo_api import Client
 from flask_login import LoginManager
+import dotenv
 # import pyrebase
 
 import os
+
+dotenv.load_dotenv()
 
 db = SQLAlchemy()
 client = Client(access_token=os.environ["VENMO_TOKEN"], )
