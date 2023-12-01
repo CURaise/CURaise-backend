@@ -9,7 +9,6 @@ grpcio-status
 gunicorn
 pip-chill
 pycryptodome
-pyrebase
 python-dotenv
 typing-extensions
 venmo-api
