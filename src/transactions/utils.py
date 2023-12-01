@@ -1,6 +1,9 @@
 from src.extensions import client
 import asyncio
 
+import random
+import string
+
 
 async def get_user_by_username(username: str) -> (int, object):
     """
@@ -33,7 +36,7 @@ async def get_transaction(buyer_id: int, club_id: int) -> (int, float):
     Get the transaction between a buyer and a club
     :param buyer_id: the venmo id of the buyer
     :param club_id: the venmo id of the club
-    :return: (status_code: 0 means ok, -1 means didn't get the transaction, -2 means time out), (amount paid)
+    :return: (status_code: 0 means ok, -1 means didn't get the transaction, -2 means time out), (transaction object)
     """
     async def async_get_transaction():
         return client.user.get_user_transactions(user_id=buyer_id, limit=10)
@@ -47,7 +50,17 @@ async def get_transaction(buyer_id: int, club_id: int) -> (int, float):
 
     for tran in transactions:
         if tran.target.id == club_id:
-            amount = tran.amount
-            return 0, amount
+            return 0, tran
 
     return -1, None
+
+
+def get_qr_code_link(transaction_id, reference_string=None):
+    return f'https://chart.googleapis.com/chart?cht=qr&chl={transaction_id}__{reference_string}&chs=500x500'
+
+def create_reference_string(transaction_id):
+    transaction_id * 76622729181571704961
+    characters = string.ascii_letters + string.digits
+    random_string = [''.join(random.choice(characters)) for _ in range(15)]
+    return random_string
+
