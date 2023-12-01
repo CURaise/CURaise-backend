@@ -1,3 +1,5 @@
+from flask import request
+
 from src.main import bp
 from src.utils import success_message
 

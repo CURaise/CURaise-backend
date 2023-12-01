@@ -1,3 +1,6 @@
+from flask import request
+import asyncio
+
 from src.clubs import bp
 from src.extensions import db
 from src.models import Club
@@ -18,7 +21,7 @@ def create_club():
     except json.decoder.JSONDecodeError as e:
         return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
 
-    status, venmo_user = get_user_by_username(username=venmo_username)
+    status, venmo_user = asyncio.run(get_user_by_username(username=venmo_username))
 
     if status == -2:
         return failure_message(FAIL_MSG.VENMO.TIMEOUT + 'create_club')

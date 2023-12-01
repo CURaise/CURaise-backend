@@ -1,3 +1,5 @@
+from flask import request
+
 from src.clubs import bp
 from src.extensions import db
 from src.models import Student

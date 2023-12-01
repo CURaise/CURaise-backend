@@ -1,3 +1,6 @@
+from flask import request
+import asyncio
+
 import random
 import string
 
@@ -13,31 +16,23 @@ from src.transactions.utils import *
 def verify_transaction():
     try:
         json_data = json.loads(request.data)
-        buyer_nickname = json_data['buyer_nickname']
-        buyer_username = json_data['buyer_username']
-
-        club_nickname = json_data['club_nickname']
-        club_username = json_data['club_username']
+        buyer_venmo_id = json_data['buyer_venmo_id']
+        club_venmo_id = json_data['club_venmo_id']
     except KeyError as e:
         return failure_message(FAIL_MSG.POST_FORM.FIELD_NAME_WRONG + str(e))
     except json.decoder.JSONDecodeError as e:
         return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
 
-    status, buyer = get_user_by_username(nickname=buyer_nickname, username=buyer_username)
+    status, amount = asyncio.run(get_transaction(buyer_id=buyer_venmo_id, club_id=club_venmo_id))
+
     if status == -2:
-        return failure_message(FAIL_MSG.VENMO.TIMEOUT + 'user')
+        return failure_message(FAIL_MSG.VENMO.TIMEOUT)
     if status == -1:
-        return failure_message(FAIL_MSG.VENMO.UNABLE_GET_USER_ID + 'user')
+        return failure_message(FAIL_MSG.VENMO.UNABLE_GET_TRANSACTION)
 
-    status, club = get_user_by_username(nickname=club_nickname, username=club_username)
-    if status == -2:
-        return failure_message(FAIL_MSG.VENMO.TIMEOUT + 'club')
-    if status == -1:
-        return failure_message(FAIL_MSG.VENMO.UNABLE_GET_USER_ID + 'club')
+    amount = 0.0 if amount is None else amount
 
-    get_transaction(buyer_id=buyer.id, club_id=club.id)
-
-    return success_message(new_transactions)
+    return success_message(amount)
 
 
 @bp.route('/create/', methods=['POST'])
