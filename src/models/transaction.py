@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from src import db
 
 
@@ -8,8 +10,9 @@ class Transaction(db.Model):
     reference_string = db.Column(db.String, nullable=False, unique=True)
     fundraiser = db.Column(db.Integer, db.ForeignKey('fundraiser.id'))
 
-    timestamp = db.Column(db.DateTime, nullable=False)
+    added_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     item = db.Column(db.Integer, db.ForeignKey('fundraiser_item.id'))
+    club = db.Column(db.Integer, db.ForeignKey('club.id'))
     payer = db.Column(db.Integer, db.ForeignKey('student.id'))
 
     status = db.Column(db.Boolean, default=False, nullable=False)
@@ -34,7 +37,7 @@ class Transaction(db.Model):
             'id': self.id,
             'reference_string': self.reference_string,
             'fundraiser': self.fundraiser,
-            'timestamp': self.timestamp,
+            'timestamp': self.added_timestamp,
             'item': self.item,
             'payer': self.payer,
             'status': self.status,
