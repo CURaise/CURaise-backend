@@ -20,16 +20,12 @@ async def get_user_by_username(username: str) -> (int, object):
 
     # We need to use asyncio because it's very easy to take a long time to query. We do not want that to happen.
     try:
-        users = await asyncio.wait_for(async_get_user_by_username(), timeout=2)
+        user = await asyncio.wait_for(async_get_user_by_username(), timeout=2)
     except asyncio.TimeoutError:
         print("Timed out when getting the user!")
         return -2, None
 
-    for u in users:
-        if u.username == username:
-            return 0, u
-
-    return -1, None
+    return -1, user
 
 
 async def get_transaction(buyer_id: int, club_id: int) -> (int, list):
