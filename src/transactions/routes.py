@@ -6,27 +6,36 @@ from src.extensions import client
 from src.transactions import bp
 from src.models import Club, Fundraiser, FundraiserItem
 from src.utils import *
+from src.transactions.utils import *
 
 
 @bp.route('/verify/', methods=['POST'])
 def verify_transaction():
     try:
         json_data = json.loads(request.data)
-        username = json_data['username']
+        buyer_nickname = json_data['buyer_nickname']
+        buyer_username = json_data['buyer_username']
+
+        club_nickname = json_data['club_nickname']
+        club_username = json_data['club_username']
     except KeyError as e:
         return failure_message(FAIL_MSG.POST_FORM.FIELD_NAME_WRONG + str(e))
     except json.decoder.JSONDecodeError as e:
         return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
 
-    try:
-        user_id = client.user.search_for_users(query=username)[0].id
-    except Exception as e:
-        return failure_message(FAIL_MSG.VENMO.UNABLE_GET_USER_ID + str(e))
+    status, buyer = get_user_by_username(nickname=buyer_nickname, username=buyer_username)
+    if status == -2:
+        return failure_message(FAIL_MSG.VENMO.TIMEOUT + 'user')
+    if status == -1:
+        return failure_message(FAIL_MSG.VENMO.UNABLE_GET_USER_ID + 'user')
 
-    try:
-        new_transactions = client.user.get_user_transactions(user_id=user_id)
-    except Exception as e:
-        return failure_message(FAIL_MSG.VENMO.UNABLE_GET_TRANSACTION + str(e))
+    status, club = get_user_by_username(nickname=club_nickname, username=club_username)
+    if status == -2:
+        return failure_message(FAIL_MSG.VENMO.TIMEOUT + 'club')
+    if status == -1:
+        return failure_message(FAIL_MSG.VENMO.UNABLE_GET_USER_ID + 'club')
+
+    get_transaction(buyer_id=buyer.id, club_id=club.id)
 
     return success_message(new_transactions)
 

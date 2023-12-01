@@ -3,6 +3,8 @@ from src.extensions import db
 from src.models import Club
 from src.utils import *
 
+from src.transactions.utils import get_user_by_username
+
 
 @bp.route('/signup/', methods=['POST'])
 def create_club():
@@ -10,16 +12,26 @@ def create_club():
         json_data = json.loads(request.data)
         name = json_data['name']
         description = json_data['description']
+        venmo_nickname = json_data['venmo_nickname']
         venmo_username = json_data['venmo_username']
     except KeyError as e:
         return failure_message(FAIL_MSG.POST_FORM.FIELD_NAME_WRONG + str(e))
     except json.decoder.JSONDecodeError as e:
         return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
 
+    status, venmo_user = get_user_by_username(nickname=venmo_nickname, username=venmo_username)
+
+    if status == -2:
+        return failure_message(FAIL_MSG.VENMO.TIMEOUT + 'create_club')
+    if status == -1:
+        return failure_message(FAIL_MSG.VENMO.UNABLE_GET_USER_ID + 'create_club')
+
     try:
         new_club = Club(
             name=name,
             description=description,
+            venmo_id=venmo_user.id,
+            venmo_nickname=venmo_nickname,
             venmo_username=venmo_username
         )
         db.session.add(new_club)

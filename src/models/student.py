@@ -10,7 +10,11 @@ class Student(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     netid = db.Column(db.String, nullable=False, unique=True)
+
+    venmo_nickname = db.Column(db.String, nullable=False, unique=False)
     venmo_username = db.Column(db.String, nullable=False, unique=True)
+    venmo_id = db.Column(db.String, nullable=False, unique=True)
+
     clubs = db.relationship("Club", secondary=student_club_association_table, back_populates='members')
 
     authenticated = db.Column(db.Boolean, nullable=False, default=False)

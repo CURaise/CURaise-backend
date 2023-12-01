@@ -16,7 +16,10 @@ class Club(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
-    venmo_username = db.Column(db.String, nullable=False)
+
+    venmo_nickname = db.Column(db.String, nullable=False, unique=False)
+    venmo_username = db.Column(db.String, nullable=False, unique=True)
+    venmo_id = db.Column(db.String, nullable=False, unique=True)
 
     members = db.relationship("Student", secondary=student_club_association_table, back_populates='clubs')
 

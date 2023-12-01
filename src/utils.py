@@ -16,6 +16,7 @@ class FAIL_MSG:
     class VENMO:
         UNABLE_GET_USER_ID = "Unable to get the user id by the username provided. "
         UNABLE_GET_TRANSACTION = "Unable to get the transactions by the id provided. "
+        TIMEOUT = "Timed out when trying to query venmo. "
 
     ADD_TO_DATABASE = "Internal issue. Unable to add the item to the database. "
     REMOVE_FROM_DATABASE = "Internal issue. Unable to remove the item from the database. "
