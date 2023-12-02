@@ -58,6 +58,10 @@ def create_student():
 
 @bp.route('/signin/', methods=['POST'])
 def signin_student():
+    '''
+    Signs in a student
+    '''
+
     try:
         json_data = json.loads(request.data)
         email = json_data['email']
@@ -83,6 +87,10 @@ def signin_student():
 @bp.route('/signout/', methods=['POST'])
 @role_required('student')
 def signout_student():
+    '''
+    Signs out a student
+    '''
+
     if logout_user():
         return success_message("Log out success. ")
     else:
@@ -92,12 +100,20 @@ def signout_student():
 @bp.route('/my/', methods=['GET'])
 @role_required('student')
 def get_me():
+    '''
+    Returns the student user
+    '''
+
     return success_message(current_user.serialize(exclude_venmo_username=True, simplified=True))
 
 
 @bp.route('/my/edit/', methods=['PUT'])
 @role_required('student')
 def edit_me():
+    '''
+    Edits the student user document
+    '''
+
     try:
         json_data = json.loads(request.data)
     except json.decoder.JSONDecodeError as e:
@@ -121,6 +137,10 @@ def edit_me():
 @bp.route('/my/', methods=['DELETE'])
 @role_required('student')
 def delete_me():
+    '''
+    Deletes the student user
+    '''
+
     try:
         db.session.delete(current_user)
         db.session.commit()
@@ -134,6 +154,10 @@ def delete_me():
 @bp.route('/<student_id>/', methods=['GET'])
 @role_required('admin')
 def get_student_by_id(student_id=None, netid=None):
+    '''
+    Gets a student by its id
+    '''
+
     if (student_id is None and netid is None) or (student_id is not None and netid is not None):
         return failure_message(FAIL_MSG.POST_FORM.ERROR + 'student_id and netid should not be all supplied or none '
                                                           'applied')
@@ -152,6 +176,10 @@ def get_student_by_id(student_id=None, netid=None):
 @bp.route('/<student_id>/edit', methods=['PUT'])
 @role_required('admin')
 def edit_student_by_id(student_id=None, netid=None):
+    '''
+    Edits a student by its id
+    '''
+
     try:
         json_data = json.loads(request.data)
     except json.decoder.JSONDecodeError as e:
@@ -177,6 +205,10 @@ def edit_student_by_id(student_id=None, netid=None):
 @bp.route('/<student_id>/', methods=['DELETE'])
 @role_required('admin')
 def delete_student_by_id(student_id=None, netid=None):
+    '''
+    Deletes a student by its id
+    '''
+
     student = get_student_by_id(student_id=student_id, netid=netid)
 
     # If and only if the return is tuple, the error was prompted in the getting function

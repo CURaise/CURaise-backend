@@ -23,6 +23,10 @@ def check_login():
 
 @bp.route('/signup/', methods=['POST'])
 def create_club():
+    '''
+    Creates a club
+    '''
+
     try:
         json_data = json.loads(request.data)
         name = json_data['name']
@@ -66,6 +70,10 @@ def create_club():
 
 @bp.route('/signin/', methods=['POST'])
 def signin_club():
+    '''
+    Signs into a club
+    '''
+
     try:
         json_data = json.loads(request.data)
         email = json_data['email']
@@ -91,6 +99,10 @@ def signin_club():
 @bp.route('/signout/', methods=['POST'])
 @role_required('club')
 def signout_club():
+    '''
+    Signs out of a club
+    '''
+
     if logout_user():
         return success_message("Log out success. ")
     else:
@@ -100,12 +112,20 @@ def signout_club():
 @bp.route('/my/', methods=['GET'])
 @role_required('club')
 def get_me():
+    '''
+    Returns the club user
+    '''
+
     return success_message(current_user.serialize())
 
 
 @bp.route('/my/edit/', methods=['PUT'])
 @role_required('club')
 def edit_me():
+    '''
+    Edits the club user
+    '''
+
     try:
         json_data = json.loads(request.data)
     except json.decoder.JSONDecodeError as e:
@@ -129,6 +149,10 @@ def edit_me():
 @bp.route('/my/', methods=['DELETE'])
 @role_required('club')
 def delete_me():
+    '''
+    Deletes the club user
+    '''
+
     try:
         db.session.delete(current_user)
         db.session.commit()
@@ -141,6 +165,10 @@ def delete_me():
 @bp.route('/<club_id>/', methods=['GET'])
 @role_required('admin')
 def get_club_by_id(club_id):
+    '''
+    Gets a club by its id
+    '''
+
     target = Club.query.filter_by(id=club_id).first()
 
     if target is None:
@@ -152,6 +180,10 @@ def get_club_by_id(club_id):
 @bp.route('/<club_id>/edit/', methods=['PUT'])
 @role_required('admin')
 def edit_club(club_id):
+    '''
+    Edits the club by its id
+    '''
+
     try:
         json_data = json.loads(request.data)
     except json.decoder.JSONDecodeError as e:
@@ -180,6 +212,10 @@ def edit_club(club_id):
 @bp.route('/<club_id>/', methods=['DELETE'])
 @role_required('admin')
 def delete_by_club_id(club_id):
+    '''
+    Deletes the club by its id
+    '''
+
     club = get_club_by_id(club_id=club_id)
 
     # If and only if the return is tuple, the error was prompted in the getting function

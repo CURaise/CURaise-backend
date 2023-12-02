@@ -14,6 +14,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 @bp.route('/signup/', methods=['POST'])
 def create_admin():
+    '''
+    Creates an admin user
+    '''
+
     try:
         json_data = json.loads(request.data)
         name = json_data['name']
@@ -43,6 +47,10 @@ def create_admin():
 
 @bp.route('/signin/', methods=['POST'])
 def signin_admin():
+    '''
+    Signs in an admin user
+    '''
+
     try:
         json_data = json.loads(request.data)
         email = json_data['email']
@@ -68,6 +76,10 @@ def signin_admin():
 @bp.route('/signout/', methods=['POST'])
 @role_required('admin')
 def signout_admin():
+    '''
+    Signs out an admin user
+    '''
+
     if logout_user():
         return success_message("Log out success. ")
     else:
@@ -77,12 +89,20 @@ def signout_admin():
 @bp.route('/my/', methods=['GET'])
 @role_required('admin')
 def get_me():
+    '''
+    Returns the current user
+    '''
+
     return success_message(current_user.serialize())
 
 
 @bp.route('/my/edit/', methods=['PUT'])
 @role_required('admin')
 def edit_me():
+    '''
+    Edits the current user
+    '''
+
     try:
         json_data = json.loads(request.data)
     except json.decoder.JSONDecodeError as e:
@@ -106,6 +126,10 @@ def edit_me():
 @bp.route('/my/', methods=['DELETE'])
 @role_required('admin')
 def delete_me():
+    '''
+    Deletes the current user
+    '''
+
     try:
         db.session.delete(current_user)
         db.session.commit()
