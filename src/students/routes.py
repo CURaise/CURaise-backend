@@ -13,6 +13,10 @@ from flask_login import login_user, logout_user, login_required, current_user
 
 @bp.route('/signup/', methods=['POST'])
 def create_student():
+    """
+    Create a student
+    :return: if success, the id of the student created
+    """
     try:
         json_data = json.loads(request.data)
         name = json_data['name']
