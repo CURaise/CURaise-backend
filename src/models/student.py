@@ -22,6 +22,13 @@ class Student(db.Model, UserMixin):
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
 
+    def get_id(self):
+        """
+        Get id function for flask_login. It will help in retrieving the user.
+        :return:
+        """
+        return self.role + "_" + str(id)
+
     @property
     def is_authenticated(self):
         """

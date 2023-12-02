@@ -25,26 +25,33 @@ class Club(db.Model, UserMixin):
 
     fundraisers = db.relationship('Fundraiser', cascade='delete')
 
-    authenticated = db.Column(db.Boolean, nullable=False, default=False)
+    # authenticated = db.Column(db.Boolean, nullable=False, default=False)
 
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
 
-    @property
-    def is_authenticated(self):
-        """
-        If the user is authenticated.
-        :return: True if authenticated. False otherwise.
-        """
-        return self.authenticated
+    # @property
+    # def is_authenticated(self):
+    #     """
+    #     If the user is authenticated.
+    #     :return: True if authenticated. False otherwise.
+    #     """
+    #     return self.authenticated
+    #
+    # @property
+    # def is_anonymous(self):
+    #     """
+    #     Return whether the student cna be anonymous
+    #     :return: False, because anonymity is not supported
+    #     """
+    #     return False
 
-    @property
-    def is_anonymous(self):
+    def get_id(self):
         """
-        Return whether the student cna be anonymous
-        :return: False, because anonymity is not supported
+        Get id function for flask_login. It will help in retrieving the user.
+        :return:
         """
-        return False
+        return self.role + "_" + str(id)
 
     def serialize(self, exclude_venmo_username=False, simplified=False):
         """

@@ -63,6 +63,7 @@ def role_required(role):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
+            # print(current_user.authenticated)
             if not current_user.is_authenticated or (current_user.role != role and current_user.role != 'admin'):
                 return failure_message(FAIL_MSG.LOGIN_REQUIRED)
             return f(*args, **kwargs)

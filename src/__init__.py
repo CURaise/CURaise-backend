@@ -9,6 +9,7 @@ from src.extensions import login_manager
 from dotenv import load_dotenv
 
 # Imports for creating the tables. DO NOT remove them for import optimization...
+from src.models.admin import Admin
 from src.models.club import Club
 from src.models.fundraiser import Fundraiser
 from src.models.fundraiser_item import FundraiserItem
@@ -28,6 +29,18 @@ def create_app(config=Config()):
         db.create_all()
 
     login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user):
+        user_info = str(user).split('_')
+        user_type, user_id = user_info[0], user_info[1]
+        if user_type == 'club':
+            user = Club.query.get(id=user_id)
+        elif user_type == 'admin':
+            user = Admin.query.get(id=user_id)
+        elif user_type == 'student':
+            user = Student.query.get(id=user_id)
+        return user
 
     from src.clubs import bp as clubs_bp
     app.register_blueprint(blueprint=clubs_bp, url_prefix='/api/clubs')

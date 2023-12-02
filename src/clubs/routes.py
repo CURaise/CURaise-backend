@@ -91,6 +91,8 @@ def signin_club():
         return failure_message(FAIL_MSG.WRONG_PASSWORD)
 
     if login_user(club, remember=True):
+        # print(current_user.authenticated)
+        # print(club.authenticated)
         return success_message("Log in success. ")
     else:
         return failure_message(FAIL_MSG.LOGIN_FAILED)
