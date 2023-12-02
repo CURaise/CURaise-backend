@@ -55,9 +55,9 @@ def create_qrcode(transaction_db_id):
 
 @bp.route('/create/', methods=['POST'])
 def create_transaction():
-    '''
+    """
     Creates a transaction
-    '''
+    """
 
     try:
         json_data = json.loads(request.data)

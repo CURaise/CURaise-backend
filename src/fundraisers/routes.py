@@ -56,9 +56,9 @@ def create_fundraisers():
 
 @bp.route('/<fundraiser_id>/', methods=['GET'])
 def get_by_fundraiser_id(fundraiser_id):
-    '''
+    """
     Gets a fundraiser by id
-    '''
+    """
 
     fundraiser = Fundraiser.query.filter_by(id=fundraiser_id).first()
 
@@ -70,9 +70,9 @@ def get_by_fundraiser_id(fundraiser_id):
 
 @bp.route('/club/<club_id>/', methods=['GET'])
 def get_by_club_id(club_id):
-    '''
+    """
     Gets fundraisers by a club by its id
-    '''
+    """
 
     fundraisers_by_club = [fundraiser.serialize() for fundraiser in Fundraiser.query.filter_by(club_id=club_id)]
 
@@ -81,9 +81,9 @@ def get_by_club_id(club_id):
 
 @bp.route('/', methods=['GET'])
 def get_all_fundraisers():
-    '''
+    """
     Gets all fundraisers
-    '''
+    """
 
     all_fundraisers = [fundraiser.serialize() for fundraiser in Fundraiser.query.all()]
 
@@ -93,9 +93,9 @@ def get_all_fundraisers():
 @bp.route('/<fundraiser_id>/edit/', methods=['PUT'])
 @role_required('club')
 def edit_fundraiser(fundraiser_id):
-    '''
+    """
     Edits fundraiser by id
-    '''
+    """
 
     try:
         json_data = json.loads(request.data)
@@ -125,9 +125,9 @@ def edit_fundraiser(fundraiser_id):
 @bp.route('/add_item/', methods=['POST'])
 @role_required('club')
 def add_fundraiser_item():
-    '''
+    """
     Adds fundraiser item
-    '''
+    """
 
     try:
         json_data = json.loads(request.data)
@@ -161,9 +161,9 @@ def add_fundraiser_item():
 @bp.route('/<fundraiser_id>/', methods=['DELETE'])
 @role_required('club')
 def delete_fundraiser_by_id(fundraiser_id):
-    '''
+    """
     Deletes fundraiser by its id
-    '''
+    """
 
     fundraiser = get_by_fundraiser_id(fundraiser_id=fundraiser_id)
 
