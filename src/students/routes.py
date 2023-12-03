@@ -8,7 +8,7 @@ from src.utils import *
 from src.transactions.utils import get_user_by_username
 
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, current_user
 
 import asyncio
 
