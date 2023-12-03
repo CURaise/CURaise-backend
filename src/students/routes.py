@@ -92,7 +92,7 @@ def signout_student():
     """
 
     if logout_user():
-        return success_message("Log out success. ")
+        return success_message(current_user.serialize(ios_style=True))
     else:
         return failure_message(FAIL_MSG.SIGNOUT_FAILED)
 

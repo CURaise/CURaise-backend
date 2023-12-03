@@ -93,7 +93,7 @@ def signin_club():
     if login_user(club, remember=True):
         # print(current_user.authenticated)
         # print(club.authenticated)
-        return success_message("Log in success. ")
+        return success_message(current_user.serialize(ios_style=True))
     else:
         return failure_message(FAIL_MSG.LOGIN_FAILED)
 

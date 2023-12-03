@@ -20,7 +20,7 @@ class Student(db.Model, UserMixin):
 
     clubs = db.relationship("Club", secondary=student_club_association_table, back_populates='members')
 
-    authenticated = db.Column(db.Boolean, nullable=False, default=False)
+    authenticated = db.Column(db.Boolean, default=False)
 
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
@@ -32,7 +32,6 @@ class Student(db.Model, UserMixin):
         """
         return self.role + "_" + str(self.id)
 
-    @property
     def is_authenticated(self):
         """
         If the user is authenticated.
@@ -40,7 +39,6 @@ class Student(db.Model, UserMixin):
         """
         return self.authenticated
 
-    @property
     def is_anonymous(self):
         """
         Return whether the student cna be anonymous

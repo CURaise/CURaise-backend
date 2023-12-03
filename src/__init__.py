@@ -34,12 +34,15 @@ def create_app(config=Config()):
     def load_user(user):
         user_info = str(user).split('_')
         user_type, user_id = user_info[0], user_info[1]
+        print(' - - - - - - -  - - - - - - -  - - - - - - -  - - - - - - -  - - - - - - -  - - - - - - - ')
+        print(user_info)
+        print(' - - - - - - -  - - - - - - -  - - - - - - -  - - - - - - -  - - - - - - -  - - - - - - - ')
         if user_type == 'club':
-            return Club.query.get({'id': user})
+            return Club.query.get({'id': user_id})
         elif user_type == 'admin':
-            return Admin.query.get({'id': user})
+            return Admin.query.get({'id': user_id})
         elif user_type == 'student':
-            return Student.query.get({'id': user})
+            return Student.query.get({'id': user_id})
         else:
             return None
 

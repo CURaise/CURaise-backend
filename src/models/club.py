@@ -26,12 +26,11 @@ class Club(db.Model, UserMixin):
 
     fundraisers = db.relationship('Fundraiser', cascade='delete')
 
-    authenticated = db.Column(db.Boolean, nullable=False, default=False)
+    authenticated = db.Column(db.Boolean)
 
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
 
-    @property
     def is_authenticated(self):
         """
         If the user is authenticated.
@@ -39,7 +38,6 @@ class Club(db.Model, UserMixin):
         """
         return self.authenticated
 
-    @property
     def is_anonymous(self):
         """
         Return whether the student cna be anonymous
