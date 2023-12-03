@@ -3,6 +3,7 @@ from datetime import datetime
 from src import db
 from src.utils import DATETIME_FORMAT
 from src.models.fundraiser_item import fundraiser_item_transaction_association_table
+from src.models import Fundraiser
 
 
 class Transaction(db.Model):
@@ -33,7 +34,7 @@ class Transaction(db.Model):
             return {
                 'id': self.id,
                 'referenceString': self.reference_string,
-                'fundraiserId': self.fundraiser,
+                'fundraiser': Fundraiser.query.get({'id': self.fundraiser}),
                 'timestamp': str(self.added_timestamp.strftime(DATETIME_FORMAT)),
                 'items': [item.serialize(ios_style=True) for item in self.items],
                 'buyerId': self.payer,

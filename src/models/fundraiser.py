@@ -42,11 +42,6 @@ class Fundraiser(db.Model):
                 'endTime': str(self.end_datetime.strftime(DATETIME_FORMAT)),
                 'items': [item.serialize() for item in self.items]
             }
-        let
-        items: [FundraiserItem]
-        let
-        transactions: [Transaction]
-
 
         extra = {}
         if not simplified:
