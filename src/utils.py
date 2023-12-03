@@ -1,8 +1,9 @@
 import json
 from functools import wraps
 from flask_login import current_user
+from flask import Response
 
-DATETIME_FORMAT = "%Y-%m-%d'T'%H:%M:%S"
+DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
 class FAIL_MSG:
     class POST_FORM:
@@ -39,7 +40,7 @@ def success_message(x, code=201):
     """
     if hasattr(x, 'serialize'):
         x = x.serialize(ios_style=True)
-    return json.dumps({'status': 'success', 'success_msg': x}), code
+    return Response(json.dumps({'message': 'success', 'data': x}), mimetype='application/json', status=code)
 
 
 def failure_message(x, code=400):
@@ -49,7 +50,7 @@ def failure_message(x, code=400):
     :param code: code to be returned. Default 400
     :return: (json.dumps(x), code)
     """
-    return json.dumps({'status': 'error', 'error_msg': x}), code
+    return Response(json.dumps({'message': 'error', 'exception': x}), mimetype='application/json', status=code)
 
 
 def role_required(role):

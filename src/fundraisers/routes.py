@@ -87,7 +87,7 @@ def get_all_fundraisers():
 
     all_fundraisers = [fundraiser.serialize(ios_style=True) for fundraiser in Fundraiser.query.all()]
 
-    return all_fundraisers
+    return success_message(all_fundraisers)
 
 
 @bp.route('/<fundraiser_id>/edit/', methods=['PUT'])
@@ -170,6 +170,9 @@ def delete_fundraiser_by_id(fundraiser_id):
     # If and only if the return is tuple, the error was prompted in the getting function
     if isinstance(fundraiser, tuple):
         return fundraiser
+
+    if fundraiser is None:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND)
 
     try:
         db.session.delete(fundraiser)
