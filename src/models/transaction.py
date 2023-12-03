@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from src import db
+from src.utils import DATETIME_FORMAT
+from src.models.fundraiser_item import fundraiser_item_transaction_association_table
 
 
 class Transaction(db.Model):
@@ -11,20 +13,32 @@ class Transaction(db.Model):
     fundraiser = db.Column(db.Integer, db.ForeignKey('fundraiser.id'))
 
     added_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
-    item = db.Column(db.Integer, db.ForeignKey('fundraiser_item.id'))
+    items = db.relationship('FundraiserItem', secondary=fundraiser_item_transaction_association_table,
+                            back_populates='transactions')
     club = db.Column(db.Integer, db.ForeignKey('club.id'))
-    payer = db.Column(db.Integer, db.ForeignKey('student.id'))
+    payer_id = db.Column(db.Integer, db.ForeignKey('student.id'))
 
     status = db.Column(db.Boolean, default=False, nullable=False)
 
-    referrer = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=True)
+    # referrer_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=True)
 
-    def serialize(self, simplified=False):
+    def serialize(self, simplified=False, ios_style=True):
         """
         A serialized the output for the transaction entry.
         :param simplified: whether the output should be simplified.
         :return: a serialized result in a dict.
         """
+
+        if ios_style:
+            return {
+                'id': self.id,
+                'referenceString': self.reference_string,
+                'fundraiserId': self.fundraiser,
+                'timestamp': str(self.added_timestamp.strftime(DATETIME_FORMAT)),
+                'items': [item.serialize(ios_style=True) for item in self.items],
+                'buyerId': self.payer,
+                'transactionComplete': self.status
+            }
 
         extra = {}
 

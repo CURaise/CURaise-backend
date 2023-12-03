@@ -41,7 +41,7 @@ def verify_transaction():
 @bp.route('/qrcode/<transaction_db_id>', methods=['GET'])
 def create_qrcode(transaction_db_id):
     """
-    Generate the QR code by the id of the transaction database provided. The app would query the reference string
+    Generate the QR code link by the id of the transaction database provided. The app would query the reference string
     and incorporate it in the qrcode.
     :param transaction_db_id:
     :return:
@@ -50,7 +50,7 @@ def create_qrcode(transaction_db_id):
         reference_string = Transaction.query.filter_by(id=transaction_db_id).first().reference_string
     except Exception as e:
         return failure_message(FAIL_MSG.VENMO.UNABLE_GET_TRANSACTION + str(e))
-    return redirect(get_qr_code_link(transaction_db_id, reference_string=reference_string))
+    return success_message(get_qr_code_link(transaction_db_id, reference_string=reference_string))
 
 
 @bp.route('/create/', methods=['POST'])

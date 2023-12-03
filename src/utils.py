@@ -2,8 +2,7 @@ import json
 from functools import wraps
 from flask_login import current_user
 
-DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-
+DATETIME_FORMAT = "%Y-%m-%d'T'%H:%M:%S"
 
 class FAIL_MSG:
     class POST_FORM:

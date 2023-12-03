@@ -1,7 +1,6 @@
 from flask_login import UserMixin
 
 from src import db
-from .fundraiser import Fundraiser
 
 # association table to connect Club with Student that is a member
 student_club_association_table = db.Table("student_club_association_table", db.Model.metadata,
@@ -18,48 +17,59 @@ class Club(db.Model, UserMixin):
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
 
-    venmo_username = db.Column(db.String, nullable=False, unique=True)
-    venmo_id = db.Column(db.String, nullable=False, unique=True)
+    # venmo_username = db.Column(db.String, nullable=False, unique=True)
+    venmo_username = db.Column(db.String, nullable=False)
+    # venmo_id = db.Column(db.String, nullable=False, unique=True)
+    venmo_id = db.Column(db.String, nullable=False)
 
     members = db.relationship("Student", secondary=student_club_association_table, back_populates='clubs')
 
     fundraisers = db.relationship('Fundraiser', cascade='delete')
 
-    # authenticated = db.Column(db.Boolean, nullable=False, default=False)
+    authenticated = db.Column(db.Boolean, nullable=False, default=False)
 
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
 
-    # @property
-    # def is_authenticated(self):
-    #     """
-    #     If the user is authenticated.
-    #     :return: True if authenticated. False otherwise.
-    #     """
-    #     return self.authenticated
-    #
-    # @property
-    # def is_anonymous(self):
-    #     """
-    #     Return whether the student cna be anonymous
-    #     :return: False, because anonymity is not supported
-    #     """
-    #     return False
+    @property
+    def is_authenticated(self):
+        """
+        If the user is authenticated.
+        :return: True if authenticated. False otherwise.
+        """
+        return self.authenticated
+
+    @property
+    def is_anonymous(self):
+        """
+        Return whether the student cna be anonymous
+        :return: False, because anonymity is not supported
+        """
+        return False
 
     def get_id(self):
         """
         Get id function for flask_login. It will help in retrieving the user.
         :return:
         """
-        return self.role + "_" + str(id)
+        return self.role + "_" + str(self.id)
 
-    def serialize(self, exclude_venmo_username=False, simplified=False):
+    def serialize(self, exclude_venmo_username=False, simplified=False, ios_style=True):
         """
         A serialized the output for the club entry.
         :param exclude_venmo_username: whether to exclude the venmo_username.
         :param simplified: whether the output should be simplified.
+        :param ios_style: just return the ios style's serialization
         :return: a serialized result in a dict.
         """
+        if ios_style:
+            return {
+                'id': self.id,
+                'name': self.name,
+                'description': self.description,
+                'venmoUsername': self.venmo_username
+            }
+
         venmo_username = {}
         extra = {}
 

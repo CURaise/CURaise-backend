@@ -1,6 +1,7 @@
 from src import db
 from datetime import datetime
 from src.utils import DATETIME_FORMAT
+from .club import Club
 
 
 class Fundraiser(db.Model):
@@ -20,12 +21,33 @@ class Fundraiser(db.Model):
 
     items = db.relationship('FundraiserItem', cascade='delete')
 
-    def serialize(self, simplified=False):
+    def serialize(self, simplified=False, ios_style=True):
         """
         A serialized the output for the fundraiser event entry.
         :param simplified: whether the output should be simplified.
+        :param ios_style: just return the ios style's serialization
         :return: a serialized result in a dict.
         """
+
+        if ios_style:
+            return {
+                'id': self.id,
+                'club': Club.query.get({'id': self.club_id}).serialize(ios_style=True),
+                'title': self.title,
+                'description': self.description,
+                'activeStatus': self.end_datetime <= datetime.utcnow(),
+                'createdTime': str(self.created_datetime.strftime(DATETIME_FORMAT)),
+                'lastModifiedTime': str(self.last_modified_datetime.strftime(DATETIME_FORMAT)),
+                'startTime': str(self.start_datetime.strftime(DATETIME_FORMAT)),
+                'endTime': str(self.end_datetime.strftime(DATETIME_FORMAT)),
+                'items': [item.serialize() for item in self.items]
+            }
+        let
+        items: [FundraiserItem]
+        let
+        transactions: [Transaction]
+
+
         extra = {}
         if not simplified:
             extra = {

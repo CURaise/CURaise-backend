@@ -2,6 +2,7 @@ from flask_login import UserMixin
 
 from src import db
 from .club import student_club_association_table
+from .transaction import Transaction
 
 
 class Student(db.Model, UserMixin):
@@ -15,6 +16,8 @@ class Student(db.Model, UserMixin):
     venmo_username = db.Column(db.String, nullable=False, unique=True)
     venmo_id = db.Column(db.String, nullable=False, unique=True)
 
+    transactions = db.relationship("Transaction")
+
     clubs = db.relationship("Club", secondary=student_club_association_table, back_populates='members')
 
     authenticated = db.Column(db.Boolean, nullable=False, default=False)
@@ -27,7 +30,7 @@ class Student(db.Model, UserMixin):
         Get id function for flask_login. It will help in retrieving the user.
         :return:
         """
-        return self.role + "_" + str(id)
+        return self.role + "_" + str(self.id)
 
     @property
     def is_authenticated(self):
@@ -45,13 +48,23 @@ class Student(db.Model, UserMixin):
         """
         return False
 
-    def serialize(self, exclude_venmo_username=False, simplified=False):
+    def serialize(self, exclude_venmo_username=False, simplified=False, ios_style=True):
         """
         A serialized the output for the student entry.
         :param exclude_venmo_username: whether to exclude the venmo_username.
         :param simplified: whether the output should be simplified.
+        :param ios_style: just return the ios style's serialization
         :return: a serialized result in a dict.
         """
+
+        if ios_style:
+            return {
+                'id': self.id,
+                'name': self.name,
+                'venmoUsername': self.venmo_username,
+                'transactions': [transaction.serialize(ios_style=True) for transaction in self.transactions]
+            }
+
         venmo_username = {}
         extra = {}
 

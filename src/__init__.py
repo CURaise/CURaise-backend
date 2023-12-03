@@ -35,12 +35,13 @@ def create_app(config=Config()):
         user_info = str(user).split('_')
         user_type, user_id = user_info[0], user_info[1]
         if user_type == 'club':
-            user = Club.query.get(id=user_id)
+            return Club.query.get({'id': user})
         elif user_type == 'admin':
-            user = Admin.query.get(id=user_id)
+            return Admin.query.get({'id': user})
         elif user_type == 'student':
-            user = Student.query.get(id=user_id)
-        return user
+            return Student.query.get({'id': user})
+        else:
+            return None
 
     from src.clubs import bp as clubs_bp
     app.register_blueprint(blueprint=clubs_bp, url_prefix='/api/clubs')
