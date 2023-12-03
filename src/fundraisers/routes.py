@@ -165,7 +165,7 @@ def delete_fundraiser_by_id(fundraiser_id):
     Deletes fundraiser by its id
     """
 
-    fundraiser = get_by_fundraiser_id(fundraiser_id=fundraiser_id)
+    fundraiser = Fundraiser.query.filter_by(id=fundraiser_id).first()
 
     # If and only if the return is tuple, the error was prompted in the getting function
     if isinstance(fundraiser, tuple):
