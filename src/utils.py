@@ -38,7 +38,7 @@ def success_message(x, code=201):
     :return: (json.dumps(x), code)
     """
     if hasattr(x, 'serialize'):
-        x = x.serialize()
+        x = x.serialize(ios_style=True)
     return json.dumps({'status': 'success', 'success_msg': x}), code
 
 

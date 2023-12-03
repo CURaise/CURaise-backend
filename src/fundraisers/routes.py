@@ -74,7 +74,7 @@ def get_by_club_id(club_id):
     Gets fundraisers by a club by its id
     """
 
-    fundraisers_by_club = [fundraiser.serialize() for fundraiser in Fundraiser.query.filter_by(club_id=club_id)]
+    fundraisers_by_club = [fundraiser.serialize(ios_style=True) for fundraiser in Fundraiser.query.filter_by(club_id=club_id)]
 
     return success_message(fundraisers_by_club)
 
@@ -85,7 +85,7 @@ def get_all_fundraisers():
     Gets all fundraisers
     """
 
-    all_fundraisers = [fundraiser.serialize() for fundraiser in Fundraiser.query.all()]
+    all_fundraisers = [fundraiser.serialize(ios_style=True) for fundraiser in Fundraiser.query.all()]
 
     return all_fundraisers
 
