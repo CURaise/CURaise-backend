@@ -64,7 +64,7 @@ def create_reference_string(transaction_id):
     transaction_id * 76622729181571704961  # A large prime number
     characters = string.ascii_letters + string.digits
     random_string = [''.join(random.choice(characters)) for _ in range(15)]
-    return random_string
+    return ''.join(random_string)
 
 
 def get_qr_code_link(transaction_id, reference_string):

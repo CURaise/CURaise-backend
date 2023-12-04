@@ -71,7 +71,7 @@ def create_club():
 
     login_user(new_club, remember=True)
 
-    return success_message(user.uid)
+    return success_message(new_club.id)
 
 
 @bp.route('/signin/', methods=['POST'])

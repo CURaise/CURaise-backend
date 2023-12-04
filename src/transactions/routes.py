@@ -1,9 +1,10 @@
 from flask import request, redirect
 import asyncio
+
 from src.extensions import db
 from src.extensions import client
 from src.transactions import bp
-from src.models import Transaction
+from src.models import Transaction, FundraiserItem
 from src.utils import *
 from src.transactions.utils import *
 
@@ -16,15 +17,25 @@ def verify_transaction():
     """
     try:
         json_data = json.loads(request.data)
-        buyer_venmo_id = json_data['buyer_venmo_id']
-        club_venmo_id = json_data['club_venmo_id']
+        token = json_data['Authorization']
+        club_venmo_username = json_data['club_venmo_username']
     except KeyError as e:
         return failure_message(FAIL_MSG.POST_FORM.FIELD_NAME_WRONG + str(e))
     except json.decoder.JSONDecodeError as e:
         return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
 
+    uid = verify_firebase_token(token)
+    if uid is None:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND)
+
+    buyer = firebase_get_model(uid=uid)
+    club = Club.query.filter_by(venmo_username=club_venmo_username).first()
+
+    if club is None:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND)
+
     try:
-        status, tran = asyncio.run(get_transaction(buyer_id=buyer_venmo_id, club_id=club_venmo_id))
+        status, tran = asyncio.run(get_transaction(buyer_id=buyer.venmo_id, club_id=club.venmo_id))
     except Exception as e:
         return failure_message(FAIL_MSG.VENMO.UNABLE_GET_TRANSACTION + str(e))
 
@@ -61,11 +72,17 @@ def create_transaction():
 
     try:
         json_data = json.loads(request.data)
-        transaction_id = json_data['transaction_id']
+        # transaction_id = json_data['transaction_id']
         fundraiser_id = json_data['fundraiser_id']
         fundraiser_item_id = json_data['fundraiser_item_id']
+        token = json_data['Authorization']
+
+        uid = verify_firebase_token(token)
+        if uid is None:
+            return failure_message(FAIL_MSG.TARGET_NOT_FOUND)
+
         club_id = json_data['club_id']
-        payer_id = json_data['payer_id']
+
         referrer = None
         if 'referrer' in json_data.keys():
             referrer = json_data['referrer']
@@ -75,24 +92,27 @@ def create_transaction():
     except json.decoder.JSONDecodeError as e:
         return failure_message(FAIL_MSG.POST_FORM.ERROR + str(e))
 
-    reference_string = create_reference_string(transaction_id=transaction_id)
+    buyer = firebase_get_model(uid=uid)
+    reference_string = create_reference_string(transaction_id=8910234)
 
     try:
-        status, tran = asyncio.run(get_transaction(buyer_id=payer_id, club_id=club_id))
+        status, tran = asyncio.run(get_transaction(buyer_id=buyer.venmo_id, club_id=club_id))
     except Exception as e:
         return failure_message(FAIL_MSG.VENMO.UNABLE_GET_TRANSACTION + str(e))
 
     status_bool = (status == 0)
 
+    fundraiser_items = [FundraiserItem.query.filter_by(id=fundraiser_item).first() for fundraiser_item in fundraiser_item_id]
+
     try:
         new_tran = Transaction(
             reference_string=reference_string,
             fundraiser=fundraiser_id,
-            item=fundraiser_item_id,
+            items=fundraiser_items,
             club=club_id,
-            payer=payer_id,
+            payer_id=buyer.id,
             status=status_bool,
-            referrer=referrer,
+            # referrer_id=referrer,
         )
         db.session.add(new_tran)
         db.session.commit()

@@ -162,3 +162,5 @@ cython_debug/
 .idea/usage.statistics.xml
 .idea/shelf
 /app.db
+
+firebase_creds.json

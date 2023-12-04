@@ -34,10 +34,10 @@ class Transaction(db.Model):
             return {
                 'id': self.id,
                 'referenceString': self.reference_string,
-                'fundraiser': Fundraiser.query.get({'id': self.fundraiser}),
+                'fundraiser': Fundraiser.query.get({'id': self.fundraiser}).serialize(ios_style=True),
                 'timestamp': str(self.added_timestamp.strftime(DATETIME_FORMAT)),
                 'items': [item.serialize(ios_style=True) for item in self.items],
-                'buyerId': self.payer,
+                'buyerId': self.payer_id,
                 'transactionComplete': self.status
             }
 
@@ -51,7 +51,7 @@ class Transaction(db.Model):
         return {
             'id': self.id,
             'reference_string': self.reference_string,
-            'fundraiser': self.fundraiser,
+            'fundraiser': self.fundraiser.serialize(ios_style=True),
             'timestamp': self.added_timestamp,
             'item': self.item,
             'payer': self.payer,
