@@ -158,6 +158,23 @@ def add_fundraiser_item():
     return success_message(new_fundraiser_item)
 
 
+@bp.route('/delete_item/<item_id>', methods=['DELETE'])
+@role_required('club')
+def delete_fundraiser_item(item_id):
+    fundraiser_item = FundraiserItem.query.filter_by(id=item_id).first()
+
+    # If and only if the return is tuple, the error was prompted in the getting function
+
+    if fundraiser_item is None:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND)
+
+    try:
+        db.session.delete(fundraiser_item)
+        db.session.commit()
+    except Exception as e:
+        return failure_message(FAIL_MSG.REMOVE_FROM_DATABASE + str(e))
+
+
 @bp.route('/<fundraiser_id>/', methods=['DELETE'])
 @role_required('club')
 def delete_fundraiser_by_id(fundraiser_id):
