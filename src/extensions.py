@@ -1,16 +1,23 @@
 from flask_sqlalchemy import SQLAlchemy
 from venmo_api import Client
 from flask_login import LoginManager
+
 import dotenv
 # import pyrebase
 
 import os
+
+import firebase_admin
+from firebase_admin import credentials, auth
 
 dotenv.load_dotenv()
 
 db = SQLAlchemy()
 client = Client(access_token=os.environ["VENMO_TOKEN"], )
 login_manager = LoginManager()
+
+cred = credentials.Certificate("curaise-mvp-firebase-adminsdk-4nxtv-07a17b43c3.json")
+firebase_admin.initialize_app(cred)
 
 # firebase_config = {
 #   "apiKey": os.environ['FIREBASE_APIKEY'],

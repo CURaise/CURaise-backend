@@ -2,7 +2,6 @@ from flask_login import UserMixin
 
 from src import db
 from .club import student_club_association_table
-from .transaction import Transaction
 
 
 class Student(db.Model, UserMixin):
@@ -24,6 +23,7 @@ class Student(db.Model, UserMixin):
 
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
+    firebase_uid = db.Column(db.String, nullable=False)
 
     def get_id(self):
         """
@@ -36,8 +36,11 @@ class Student(db.Model, UserMixin):
         """
         If the user is authenticated.
         :return: True if authenticated. False otherwise.
+        NOTE: STARTING DEC/3RD, AUTH MOVED TO FIREBASE, FLASK_LOGIN IS DEPRECATED FOR CLUB AND STUDENT, BUT CODE
+        REMAINED FOR ORGANIZATIONAL PURPOSES.
         """
-        return self.authenticated
+        return True
+        # return self.authenticated
 
     def is_anonymous(self):
         """
@@ -59,8 +62,10 @@ class Student(db.Model, UserMixin):
             return {
                 'id': self.id,
                 'name': self.name,
+                'netid': self.netid,
                 'venmoUsername': self.venmo_username,
-                'transactions': [transaction.serialize(ios_style=True) for transaction in self.transactions]
+                'transactions': [transaction.serialize(ios_style=True) for transaction in self.transactions],
+                'firebaseUid': self.firebase_uid
             }
 
         venmo_username = {}

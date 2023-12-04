@@ -5,6 +5,7 @@ from flask import Flask
 from config import Config
 from src.extensions import db
 from src.extensions import login_manager
+from src.extensions import firebase_admin, auth
 
 from dotenv import load_dotenv
 

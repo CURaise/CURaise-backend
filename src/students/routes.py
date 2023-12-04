@@ -1,7 +1,7 @@
 from flask import request
 
 from src.students import bp
-from src.extensions import db
+from src.extensions import db, auth
 from src.models import Student
 from src.utils import *
 
@@ -11,6 +11,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, logout_user, current_user
 
 import asyncio
+
 
 @bp.route('/signup/', methods=['POST'])
 def create_student():
@@ -37,7 +38,14 @@ def create_student():
     if status == -1:
         return failure_message(FAIL_MSG.VENMO.UNABLE_GET_USER_ID + 'create_student')
 
-    password = generate_password_hash(password)
+    # password = generate_password_hash(password)
+
+    # Note: after user is created on firebase, it's possible it will not be populated in our database. FIXME
+    user = auth.create_user(
+        email=email,
+        password=password
+    )
+
     try:
         new_student = Student(
             name=name,
@@ -45,16 +53,19 @@ def create_student():
             venmo_id=venmo_user.id,
             venmo_username=venmo_username,
             email=email,
-            password=password
+            password=password,
+            firebase_uid=user.uid
         )
         db.session.add(new_student)
         db.session.commit()
     except Exception as e:
         return failure_message(FAIL_MSG.ADD_TO_DATABASE + str(e))
 
-    login_user(new_student, remember=True)
+    # # NOTE: STARTING DEC/3RD, AUTH MOVED TO FIREBASE, FLASK_LOGIN IS DEPRECATED FOR CLUB AND STUDENT, BUT CODE
+    # # REMAINED FOR ORGANIZATIONAL PURPOSES.
+    # login_user(new_student, remember=True)
 
-    return success_message(new_student.id)
+    return success_message(user.uid)
 
 
 @bp.route('/signin/', methods=['POST'])
@@ -99,13 +110,24 @@ def signout_student():
 
 
 @bp.route('/my/', methods=['GET'])
-@role_required('student')
+# @role_required('student')
 def get_me():
     """
     Returns the student user
     """
 
-    return success_message(current_user.serialize(exclude_venmo_username=True, simplified=True))
+    authorization = request.args.get('Authorization').split('\n')[-1]
+
+    uid = verify_firebase_token(authorization)
+    if uid is None:
+        return failure_message(FAIL_MSG.LOGIN_REQUIRED)
+
+    user = firebase_get_model(uid)
+    if user is None:
+        return failure_message(FAIL_MSG.TARGET_NOT_FOUND)
+
+    return success_message(user)
+    # return success_message(current_user)
 
 
 @bp.route('/my/edit/', methods=['PUT'])
@@ -201,6 +223,7 @@ def edit_student_by_id(student_id=None, netid=None):
         return failure_message(FAIL_MSG.ADD_TO_DATABASE + str(e))
 
     return success_message(student.serialize(exclude_venmo_username=True, simplified=True))
+
 
 @bp.route('/netid/<netid>/', methods=['DELETE'])
 @bp.route('/<student_id>/', methods=['DELETE'])

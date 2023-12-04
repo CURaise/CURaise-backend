@@ -30,13 +30,17 @@ class Club(db.Model, UserMixin):
 
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
+    firebase_uid = db.Column(db.String, nullable=False)
 
     def is_authenticated(self):
         """
         If the user is authenticated.
         :return: True if authenticated. False otherwise.
+        NOTE: STARTING DEC/3RD, AUTH MOVED TO FIREBASE, FLASK_LOGIN IS DEPRECATED FOR CLUB AND STUDENT, BUT CODE
+        REMAINED FOR ORGANIZATIONAL PURPOSES.
         """
-        return self.authenticated
+        return True
+        # return self.authenticated
 
     def is_anonymous(self):
         """

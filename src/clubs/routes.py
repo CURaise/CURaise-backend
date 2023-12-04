@@ -2,7 +2,7 @@ from flask import request
 import asyncio
 
 from src.clubs import bp
-from src.extensions import db
+from src.extensions import db, auth
 from src.models import Club
 from src.utils import *
 
@@ -49,6 +49,11 @@ def create_club():
 
     password = generate_password_hash(password)
 
+    user = auth.create_user(
+        email=email,
+        password=password
+    )
+
     try:
         new_club = Club(
             name=name,
@@ -56,7 +61,8 @@ def create_club():
             venmo_id=venmo_user.id,
             venmo_username=venmo_username,
             email=email,
-            password=password
+            password=password,
+            firebase_uid=user.uid
         )
         db.session.add(new_club)
         db.session.commit()
@@ -65,7 +71,7 @@ def create_club():
 
     login_user(new_club, remember=True)
 
-    return success_message(new_club.id)
+    return success_message(user.uid)
 
 
 @bp.route('/signin/', methods=['POST'])

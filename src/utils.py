@@ -1,9 +1,15 @@
 import json
 from functools import wraps
+
+from firebase_admin import auth
 from flask_login import current_user
 from flask import Response
 
 DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
+
+from src.models.club import Club
+from src.models.student import Student
+
 
 class FAIL_MSG:
     class POST_FORM:
@@ -69,3 +75,23 @@ def role_required(role):
             return f(*args, **kwargs)
         return decorated_function
     return decorator
+
+
+def verify_firebase_token(id_token):
+    """
+    Verify firebase token
+    :param id_token: the id token
+    :return: None if error. Otherwise the uid
+    """
+    try:
+        decoded_token = auth.verify_id_token(id_token)
+        return decoded_token['uid']
+    except Exception as e:
+        print(str(e))
+        return None
+
+
+def firebase_get_model(uid):
+    # UNTESTED
+    club = Club.query.filter_by(firebase_uid=str(uid)).first()
+    return club if club is not None else Student.query.filter_by(firebase_uid=str(uid)).first()
