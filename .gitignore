@@ -163,4 +163,4 @@ cython_debug/
 .idea/shelf
 /app.db
 
-firebase_creds.json
+/firebase_creds.json
